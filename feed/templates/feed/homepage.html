@@ -1,0 +1,10 @@
+{%extends "base.html" %}
+{%block title%} HOMEPAGE
+{%endblock%}
+{%block body%}
+{% comment %} posts:context_object_name de views {% endcomment %}
+    {%for post in posts%}
+        {{post.text}} written on{{post.date}}
+        <hr>
+    {%endfor%}
+{%endblock%}
