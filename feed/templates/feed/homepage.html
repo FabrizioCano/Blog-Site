@@ -2,8 +2,11 @@
 {%block title%} HOMEPAGE
 {%endblock%}
 {%block body%}
-    {%for post in posts%}
-        <!-- component :https://tailwindcomponents.com/component/post-artical-->
-        {%include "includes/post.html" with post=post show_detail_link=True %}
-    {%endfor%}
+  
+    <div id="posts-container">
+        {%for post in posts%}
+            <!-- component :https://tailwindcomponents.com/component/post-artical-->
+            {%include "includes/post.html" with post=post show_detail_link=True %}
+        {%endfor%}
+    </div>
 {%endblock%}

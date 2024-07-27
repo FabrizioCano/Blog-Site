@@ -2,6 +2,10 @@ from django.views.generic import ListView,DetailView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Post
+from django.shortcuts import render
+
+
+
 # Create your views here.
 class HomePage(ListView):
     http_method_names=["get"]
@@ -15,21 +19,35 @@ class PostDetailView(DetailView):
     model=Post
     context_object_name="post"
 
-class CreateNewPost(LoginRequiredMixin,CreateView):
-    model=Post
-    template_name="feed/create.html"
+class CreateNewPost(LoginRequiredMixin, CreateView):
+    model = Post
+    template_name = "feed/create.html"
     fields = ['text']
-    success_url="/"
-    
-    
+    success_url = "/"
+
     def dispatch(self, request, *args, **kwargs):
-        self.request=request
-        return super().dispatch(request,*args,**kwargs)
-    
-    def form_valid(self,form):
-        #obtener los datos del formulario
-        obj=form.save(commit=False)
-        #request viene de dispatch, que se ejecuta antes que la funcion del form
-        obj.author=self.request.user
+        self.request = request
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.author = self.request.user
         obj.save()
         return super().form_valid(form)
+    def post(self, request, *args, **kwargs):
+        # TODO: There is a bug here when you go to /new/ to create a post.
+        # You must figure out how to determine if this is an Ajax request (or not an ajax request).
+        post = Post.objects.create(
+            text=request.POST.get("text"),
+            author=request.user,
+        )
+
+        return render(
+            request,
+            "includes/post.html",
+            {
+                "post": post,
+                "show_detail_link": True,
+            },
+            content_type="application/html"
+        )
