@@ -67,3 +67,30 @@ $(document).on("click", ".js-toggle-modal", function(e) {
         }
     });
 })
+.on("click",".js-follow",function(e){
+    e.preventDefault()
+    const action= $(this).attr("data-action")
+    $.ajax({
+        type: 'POST',
+        /*textarea es del base.html y este text area tiene un link de django */
+        url: $(this).data("url"),
+        data: {
+            action:action, /* follow o unfollow */
+            username: $(this).data("username")
+        },
+        /*enviqr el texto, si es exito, retornar datos html, que hara un render del includes post.html utilizando el link django del textarea */
+        success: (data) => {
+            $(".js-follow-text").text(data.wording)
+            if(action=="follow"){
+                $(this).attr("data-action","unfollow")
+            }
+
+            else {
+                $(this).attr("data-action","follow")
+            }
+        },
+        error: (error) => {
+            console.warn(error)
+        }
+    });
+})
