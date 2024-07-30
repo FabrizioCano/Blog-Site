@@ -1,18 +1,43 @@
-from django.views.generic import ListView,DetailView
+from typing import Any
+from django.db.models.query import QuerySet
+from django.views.generic import ListView,DetailView,TemplateView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Post
+from followers.models import Follower
 from django.shortcuts import render
+from django.contrib.auth.forms import UserCreationForm
 
 
 
 # Create your views here.
-class HomePage(ListView):
+class HomePage(TemplateView):
     http_method_names=["get"]
     template_name="feed/homepage.html"
-    model=Post
-    context_object_name="posts"
-    queryset=Post.objects.all().order_by('-id')[0:30]
+    
+    def dispatch(self, request, *args, **kwargs):
+        self.request=request
+        return super().dispatch(request, *args, **kwargs)
+    
+    
+    def get_context_data(self,*args,**kwargs):
+        context=super().get_context_data(*args,**kwargs)
+        
+        if self.request.user.is_authenticated:
+            #obtener una lista de los usuarios a los que seguimos
+            following=list(Follower.objects.filter(followed_by=self.request.user).values_list('following',flat=True))
+            if not following:
+                posts=Post.objects.all().order_by('-id')[0:30]
+            else:
+                posts=Post.objects.filter(author__in=following).order_by('-id')[0:60]
+        else:
+            posts=Post.objects.all().order_by('-id')[0:30]
+        context['posts']=posts
+        return context
+    
+    #override queryset
+    """ def get_queryset(self) -> QuerySet[Any]:
+        return super().get_queryset()  """
 class PostDetailView(DetailView):
     http_method_names=["get"]
     template_name="feed/detail.html"
