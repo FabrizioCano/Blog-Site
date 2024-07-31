@@ -21,9 +21,15 @@ from django.conf.urls.static import static
 from django.conf.urls import include
 from profiles import urls as profiles_urls
 from feed import urls as feed_urls
+from django.contrib.auth.views import LoginView
+from . import views
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),# new 
     path("",include(feed_urls,namespace="feed")),
     path("profile/",include(profiles_urls,namespace="profiles")),
     url("",include("allauth.urls")),
+    path('', include('django.contrib.auth.urls')),
+    path("login/",views.login_page,name="login"),
+    path("register/",views.register_page,name="register"),
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
