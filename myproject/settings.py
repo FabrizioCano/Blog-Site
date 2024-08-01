@@ -11,28 +11,28 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
 from pathlib import Path
-
+from dotenv import load_dotenv
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROJECT_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 MEDIA_ROOT=os.path.join(BASE_DIR,"media/")
 MEDIA_URL="/media/"
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "fabriziocano7@gmail.com"
-EMAIL_HOST_PASSWORD = 'vvpn tufi eshy gpfc' 
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-0p2p_0v42-9&99u5%*9n*ekmap_ig%nh8oig0b1u74os!6lx#*'
+SECRET_KEY=os.getenv("SECRET_KEY")
+DEBUG=os.getenv("DEBUG")=="True"
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")=="True"
+EMAIL_PORT = os.getenv("EMAIL_PORT")
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'followers',
     'widget_tweaks',
     'sorl.thumbnail',
+    'dotenv',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
