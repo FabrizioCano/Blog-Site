@@ -18,6 +18,13 @@ PROJECT_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 MEDIA_ROOT=os.path.join(BASE_DIR,"media/")
 MEDIA_URL="/media/"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "fabriziocano7@gmail.com"
+EMAIL_HOST_PASSWORD = 'vvpn tufi eshy gpfc' 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -41,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'feed',
+    'accounts',
     'profiles',
     'followers',
     'widget_tweaks',
@@ -67,7 +75,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(PROJECT_DIR, "myproject/templates")],
+            os.path.join(PROJECT_DIR, "myproject/templates"),
+            BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,8 +90,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'myproject.wsgi.application'
-
-
+LOGIN_REDIRECT_URL = "/" 
+LOGOUT_REDIRECT_URL = "/"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
