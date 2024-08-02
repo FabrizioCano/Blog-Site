@@ -20,19 +20,34 @@
     {%else%}
         <span>&nbsp;</span>
     {%endif%}
-    <div>
-      {#to do: user link to bio, photo and thumbnail#}
-      <a class="flex items-center" href="{% url 'profiles:detail' post.author.username %}">
-        {% thumbnail post.author.profile.image "373x372" crop="center" as im %}
-        <img
-          class="mx-4 w-10 h-10 object-cover rounded-full hidden sm:block"
-          src="{{im.url}}"
-          alt="avatar" />
+    {%if request.user.is_authenticated%}
+      <div>
+        <a class="flex items-center" href="{% url 'profiles:detail' post.author.username %}">
+          {% thumbnail post.author.profile.image "373x372" crop="center" as im %}
+          <img
+            class="mx-4 w-10 h-10 object-cover rounded-full hidden sm:block"
+            src="{{im.url}}"
+            alt="avatar" />
 
-        {% endthumbnail %}
+          {% endthumbnail %}
+          <h1 class="text-gray-700 font-bold">{{post.author.username}}</h1>
+        </a>
+      </div>
+      {%else%}
+      <div>
+        <a class="flex items-center" href="#">
+          {% thumbnail post.author.profile.image "373x372" crop="center" as im %}
+          <img
+            class="mx-4 w-10 h-10 object-cover rounded-full hidden sm:block"
+            src="{{im.url}}"
+            alt="avatar" />
 
-        <h1 class="text-gray-700 font-bold">{{post.author.username}}</h1>
-      </a>
-    </div>
+          {% endthumbnail %}
+          <h1 class="text-gray-700 font-bold">{{post.author.username}}</h1>
+        </a>
+        <p class="mt-3">Login to see the information of this user</p>
+      </div>
+        
+      {%endif%}
   </div>
 </div>

@@ -6,6 +6,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, JsonResponse,HttpResponseBadRequest
 from feed.models import Post
 from followers.models import Follower
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
+from .forms import UpdateUserForm, UpdateProfileForm
 class ProfileDetailView(DetailView):
     http_method_names=["get"]
     template_name="profiles/detail.html"
@@ -58,3 +63,24 @@ class FollowView(LoginRequiredMixin,View):
             'sucess':True,
             'wording':"Unfollow" if data['action']=="follow" else "Follow"
         })
+
+
+
+#importar los forms y crear instancias ya sea get o post. Si se solicita el formulario (post) , se debe pasar la informacion del request post a los formularios. Para el perfil existe una foto (en request.FORMS)
+
+def update_profile(request):
+    if request.method == 'POST':
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Your profile is updated successfully')
+            return redirect(to='/')
+    else:
+        user_form = UpdateUserForm(instance=request.user)
+        profile_form = UpdateProfileForm(instance=request.user.profile)
+
+    return render(request, 'registration/profile.html', {'user_form': user_form, 'profile_form': profile_form})
+        

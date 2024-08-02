@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from sorl.thumbnail import ImageField
 # Create your models here.
+from PIL import Image
 class Profile(models.Model):
     user = models.OneToOneField(
         User,
@@ -14,9 +15,13 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
     
+    
 """ cuando un usuario sea guardado, ejecutar la funcion crar perfil de usuario """
 @receiver(post_save,sender=User)
 def create_user_profile(sender,instance,created,**kwargs):
     """ CREAR UN NUEVO OBJETO DE PERFIL CUANDO UN USUARIO DE DJANGO SEA CREADO """
     if created:
         Profile.objects.create(user=instance)
+        
+
+# resizing images
