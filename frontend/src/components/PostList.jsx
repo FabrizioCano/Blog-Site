@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-
+import defaultImage from "../assets/default.jpg";
 export default function PostList({ posts, showDetailLink = true, isAuthenticated = false }) {
   return (
     <div className="flex flex-col items-center">
@@ -37,7 +37,7 @@ export default function PostList({ posts, showDetailLink = true, isAuthenticated
             <div className="flex items-center">
               <img
                 className="mx-4 w-10 h-10 object-cover rounded-full hidden sm:block"
-                src={post.author.profile?.image || '../assets/default.jpg'}
+                src={post.author.profile?.image || defaultImage}
                 alt={`${post.author.username}'s profile picture`}
               />
 

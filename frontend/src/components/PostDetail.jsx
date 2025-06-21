@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-
+import defaultImage from "../assets/default.jpg";
 export default function PostDetail() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
@@ -49,7 +49,8 @@ export default function PostDetail() {
           >
             <img
               className="mx-4 w-10 h-10 object-cover rounded-full hidden sm:block"
-              src={post.author.profile?.image || "/default-avatar.png"}
+              src={post.author.profile?.image || defaultImage
+              }
               alt="avatar"
             />
             <h1 className="text-gray-700 font-bold">{post.author.username}</h1>
