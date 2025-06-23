@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
 import PostList from "./PostList";
-import { authFetch } from "../utils/auth";
+import { useAuth } from "../contexts/AuthContext";
 export default function PostPage() {
   const [posts, setPosts] = useState([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    setIsAuthenticated(!!localStorage.getItem("access"));
-  }, []);
+  const { user, authFetch } = useAuth();
 
   useEffect(() => {
     async function fetchPosts() {
@@ -21,7 +17,7 @@ export default function PostPage() {
     }
 
     fetchPosts();
-  }, []);
+  }, [user,authFetch]);  // Recargar posts si cambia user o authFetch
 
-  return <PostList posts={posts} showDetailLink={isAuthenticated} isAuthenticated={isAuthenticated} />;
+  return <PostList posts={posts} showDetailLink={!!user} isAuthenticated={!!user} />;
 }

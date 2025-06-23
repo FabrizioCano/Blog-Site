@@ -6,15 +6,16 @@ import Home from "./components/Home";
 import PostCreate from "./components/PostCreate";
 import PostDetail from "./components/PostDetail";
 import ProfilePage from "./components/ProfileDetail";
-
 import "./App.css"; 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AuthProvider } from "./contexts/AuthContext";
 
 
 export default function App() {
   return (
     
+    <AuthProvider>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -23,11 +24,9 @@ export default function App() {
         <Route path="/create" element={<PostCreate />} />
         <Route path="/posts/:id" element={<PostDetail />} />
         <Route path="/profile/:username" element={<ProfilePage />} />
-        
       </Routes>
        <ToastContainer position="top-center" theme="colored" autoClose={3000} />
     </BrowserRouter>
-    
-
+  </AuthProvider>
   );
 }

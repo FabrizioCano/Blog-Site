@@ -3,13 +3,10 @@ import SideBar from "./SideBar";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Header from "./Header";
+import { useAuth } from "../contexts/AuthContext";
 export default function Home() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("access");
-    setIsAuthenticated(!!token);
-  }, []);
+  const { user } = useAuth();
+  
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
@@ -23,7 +20,7 @@ export default function Home() {
           linkUrl=""
         />
 
-        {!isAuthenticated && (
+        {!user && (
           <div className="text-center text-lg text-gray-600 space-y-4">
             <p>You must be logged in to create a post</p>
           </div>

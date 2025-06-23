@@ -3,6 +3,8 @@ import { register } from "../../api";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { toast } from "react-toastify";
+import { GoogleLogin } from "@react-oauth/google";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -11,7 +13,18 @@ export default function Register() {
     password1: "",
     password2: "",
   });
+
+  const { googleLogin } = useAuth();
   const navigate = useNavigate();
+
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    try {
+      await googleLogin(credentialResponse.credential);
+      navigate("/");
+    } catch (error) {
+      toast.error("Google login failed");
+    }
+  };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -46,10 +59,9 @@ export default function Register() {
     }
   };
 
-
   return (
     <div className="bg-gray-100 min-h-screen flex items-center justify-center">
-      <div className="relative z-10 bg-white p-8 rounded-md shadow-lg w-full max-w-md">
+      <div className="bg-white p-8 rounded-md shadow-lg w-full max-w-md relative z-10">
         <Header
           heading="Register"
           paragraph="Already have an account?"
@@ -57,69 +69,63 @@ export default function Register() {
           linkUrl="/login"
         />
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="username">Username</label>
-            <input
-              required
-              name="username"
-              id="username"
-              placeholder="Username"
-              value={form.username}
-              onChange={handleChange}
-              className="appearance-none border rounded-md py-2 px-3 text-gray-700 w-full focus:outline-none focus:shadow-outline"
-            />
-          </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            required
+            name="username"
+            placeholder="Username"
+            value={form.username}
+            onChange={handleChange}
+            className="w-full border rounded-md py-2 px-3 text-gray-700"
+          />
 
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="email">Email</label>
-            <input
-              required
-              name="email"
-              id="email"
-              type="email"
-              placeholder="Email"
-              value={form.email}
-              onChange={handleChange}
-              className="appearance-none border rounded-md py-2 px-3 text-gray-700 w-full focus:outline-none focus:shadow-outline"
-            />
-          </div>
+          <input
+            required
+            name="email"
+            type="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            className="w-full border rounded-md py-2 px-3 text-gray-700"
+          />
 
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="password1">Password</label>
-            <input
-              required
-              name="password1"
-              id="password1"
-              type="password"
-              placeholder="Password"
-              value={form.password1}
-              onChange={handleChange}
-              className="appearance-none border rounded-md py-2 px-3 text-gray-700 w-full focus:outline-none focus:shadow-outline"
-            />
-          </div>
+          <input
+            required
+            name="password1"
+            type="password"
+            placeholder="Password"
+            value={form.password1}
+            onChange={handleChange}
+            className="w-full border rounded-md py-2 px-3 text-gray-700"
+          />
 
-          <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="password2">Confirm Password</label>
-            <input
-              required
-              name="password2"
-              id="password2"
-              type="password"
-              placeholder="Confirm Password"
-              value={form.password2}
-              onChange={handleChange}
-              className="appearance-none border rounded-md py-2 px-3 text-gray-700 w-full focus:outline-none focus:shadow-outline"
-            />
-          </div>
+          <input
+            required
+            name="password2"
+            type="password"
+            placeholder="Confirm Password"
+            value={form.password2}
+            onChange={handleChange}
+            className="w-full border rounded-md py-2 px-3 text-gray-700"
+          />
 
           <button
             type="submit"
-            className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
           >
             Register
           </button>
         </form>
+
+        {/* <div className="mt-6 text-center">
+          <p className="text-gray-500 mb-2">Or register with Google:</p>
+          <GoogleLogin
+            onSuccess={handleGoogleLoginSuccess}
+            onError={() => toast.error("Google Login Failed")}
+            width="100%"
+          />
+
+        </div> */}
       </div>
     </div>
   );

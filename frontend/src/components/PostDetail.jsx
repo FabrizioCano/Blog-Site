@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import defaultImage from "../assets/default.jpg";
+import { useAuth } from "../contexts/AuthContext";
 export default function PostDetail() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [error, setError] = useState(null);
+  const { authFetch } = useAuth();
 
   useEffect(() => {
+    //funcion para obtener los detalles de un post
     const fetchPost = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/feed/posts/${id}/`);
+        const res = await authFetch(`${import.meta.env.VITE_API_URL}/feed/posts/${id}/`);
         if (!res.ok) throw new Error("Post not found");
         const data = await res.json();
         setPost(data);
@@ -17,9 +20,9 @@ export default function PostDetail() {
         setError(err.message);
       }
     };
-
+    // Llamar a la función para obtener los detalles del post
     fetchPost();
-  }, [id]);
+  }, [id,authFetch]); // Dependencias: id y authFetch
 
   if (error) {
     return <div className="text-center mt-10 text-red-600">{error}</div>;
