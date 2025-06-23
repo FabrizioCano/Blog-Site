@@ -6,12 +6,15 @@ import Home from "./components/Home";
 import PostCreate from "./components/PostCreate";
 import PostDetail from "./components/PostDetail";
 import ProfilePage from "./components/ProfileDetail";
-import MyProfile from "./components/MyProfile";
-import "./App.css"; // Assuming you have some global styles
+
+import "./App.css"; 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 export default function App() {
   return (
+    
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -20,10 +23,11 @@ export default function App() {
         <Route path="/create" element={<PostCreate />} />
         <Route path="/posts/:id" element={<PostDetail />} />
         <Route path="/profile/:username" element={<ProfilePage />} />
-        <Route path="/profile/me" element={<MyProfile />} />
-
         
       </Routes>
+       <ToastContainer position="top-center" theme="colored" autoClose={3000} />
     </BrowserRouter>
+    
+
   );
 }

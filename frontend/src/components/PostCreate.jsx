@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { authFetch } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import Header from "./Header";
+
 export default function PostCreate() {
   const [form, setForm] = useState({ text: "" });
   const navigate = useNavigate();
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -13,7 +17,7 @@ export default function PostCreate() {
 
     const token = localStorage.getItem("access");
     if (!token) {
-      alert("You must be logged in to create a post.");
+      toast.error("You must be logged in to create a post.");
       return;
     }
 
@@ -30,39 +34,63 @@ export default function PostCreate() {
       if (!res.ok) throw new Error("Error creating post");
 
       setForm({ text: "" });
-      alert("Post created successfully!");
+      toast.success("Post created successfully!");
       navigate("/");
     } catch (err) {
       console.error(err);
-      alert("Failed to create post.");
+      toast.error("Failed to create post.");
     }
   };
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-xl mx-auto"
-    >
-      <h2 className="text-2xl font-semibold mb-4 text-center">Create a Post</h2>
+    <div className="bg-gray-100 min-h-screen flex flex-col px-4 py-8">
 
-      <textarea
-        name="text"
-        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-        rows={4}
-        placeholder="What's on your mind?"
-        value={form.text}
-        onChange={handleChange}
-        required
-        maxLength={240}
-      ></textarea>
+      <Header
+        heading="Create a Post"
+        paragraph="Want to see all posts?"
+        linkName="Go Home"
+        linkUrl="/"
+      />
 
-      <div className="flex items-center justify-end">
-        <button
-          type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+
+      <div className="flex-1 flex items-start justify-center">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white shadow-md rounded-lg w-full max-w-4xl px-10 py-8"
         >
-          Post
-        </button>
+          <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">
+            Write something that can inspire others!
+          </h2>
+
+          <textarea
+            name="text"
+            className="border border-gray-300 bg-gray-50 rounded-md w-full py-3 px-4 text-gray-700 mb-6 leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white resize-none"
+            rows={6}
+            placeholder="What's on your mind?"
+            value={form.text}
+            onChange={handleChange}
+            required
+            maxLength={240}
+          ></textarea>
+
+          <div className="flex justify-center space-x-4">
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-3 px-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 transition"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            >
+              Post
+            </button>
+          </div>
+        </form>
       </div>
-    </form>
+    </div>
   );
 }

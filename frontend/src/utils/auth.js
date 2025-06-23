@@ -54,20 +54,28 @@ export async function authFetch(url, options = {}) {
   let access = localStorage.getItem("access");
   console.log("authFetch token:", access);
 
+
+  // construir la cabecera de la solicitud
+  // si no hay token de acceso, no se añade la cabecera de autorización
+  const headers = {
+    ...options.headers,
+    "Content-Type": "application/json",
+    ...(access ? { Authorization: `Bearer ${access}` } : {}),
+  };
+
+  
   let response = await fetch(url, {
     ...options,
-    headers: {
-      ...options.headers,
-      Authorization: `Bearer ${access}`,
-      "Content-Type": "application/json",
-    },
+    headers,
   });
 
-  if (response.status !== 401) return response;
+  // Si la respuesta es 401 (Unauthorized), intentar refrescar el token
+  if (!access || response.status !== 401) return response;
 
   console.log("Token expired, refreshing...");
   access = await refreshToken();
 
+  // Si no se pudo refrescar el token, redirigir al login
   if (!access) {
     console.warn("No se pudo refrescar token");
     localStorage.removeItem("access");
@@ -76,16 +84,18 @@ export async function authFetch(url, options = {}) {
     return response;
   }
 
+  // Reintentar la solicitud con el nuevo token de acceso
   console.log("Token refreshed:", access);
-
   localStorage.setItem("access", access);
 
+ // Rehacer la solicitud con el nuevo token de acceso
   return fetch(url, {
     ...options,
     headers: {
       ...options.headers,
-      Authorization: `Bearer ${access}`,
       "Content-Type": "application/json",
+      Authorization: `Bearer ${access}`,
     },
   });
 }
+

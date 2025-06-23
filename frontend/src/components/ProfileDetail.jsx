@@ -4,6 +4,7 @@ import { getUserIdFromToken } from "../utils/auth";
 import { useParams } from "react-router-dom";
 import { authFetch } from "../utils/auth";
 
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 function ProfilePage() {
@@ -53,7 +54,7 @@ function ProfilePage() {
         </div>
       )}
 
-      {isOwnProfile && <p className="text-center mt-4 text-gray-500">This is your profile</p>}
+      {isOwnProfile && <p className="text-center mt-4 text-gray-500"></p>}
 
       <div className="flex justify-around mt-6 text-center">
         <div>

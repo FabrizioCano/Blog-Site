@@ -16,5 +16,15 @@ export async function register(username, email, password1, password2) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, email, password1, password2 }),
   });
-  return res.json();
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    const error = new Error("Registration failed");
+    error.data = data;
+    error.status = res.status;
+    throw error;
+  }
+
+  return data;
 }

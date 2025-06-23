@@ -2,7 +2,7 @@ import PostPage from "./PostPage";
 import SideBar from "./SideBar";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
+import Header from "./Header";
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -16,7 +16,12 @@ export default function Home() {
       <SideBar />
 
       <main className="flex-1 p-6">
-        <h1 className="text-3xl text-center font-bold mb-6 text-gray-800">Recent Posts</h1>
+        <Header
+          heading="Recent Posts"
+          paragraph="Check the latest posts from users."
+          linkName=""
+          linkUrl=""
+        />
 
         {!isAuthenticated && (
           <div className="text-center text-lg text-gray-600 space-y-4">
