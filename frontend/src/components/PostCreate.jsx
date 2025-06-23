@@ -1,26 +1,31 @@
 import { useState } from "react";
-import { authFetch } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAuth } from "../contexts/AuthContext";
 import Header from "./Header";
 
 export default function PostCreate() {
   const [form, setForm] = useState({ text: "" });
   const navigate = useNavigate();
+  const {user, authFetch}= useAuth();
 
+  // Maneja los cambios en el formulario
+  // Actualiza el estado del formulario con el valor del campo correspondiente
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-
+  // Maneja el envío del formulario
+  // Envía una solicitud POST al backend para crear un nuevo post
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("access");
-    if (!token) {
+    // Verifica si el usuario está autenticado
+    // Si no está autenticado, muestra un mensaje de error y no envía el formulario
+    if (!user) {
       toast.error("You must be logged in to create a post.");
       return;
     }
-
+    // Verifica que el campo de texto no esté vacío
     const postUrl = `${import.meta.env.VITE_API_URL}/feed/posts/create/`;
     try {
       const res = await authFetch(postUrl, {
@@ -32,7 +37,7 @@ export default function PostCreate() {
       });
 
       if (!res.ok) throw new Error("Error creating post");
-
+      // Si la respuesta es exitosa, resetea el formulario y redirige al usuario a la página principal
       setForm({ text: "" });
       toast.success("Post created successfully!");
       navigate("/");

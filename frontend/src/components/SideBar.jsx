@@ -1,18 +1,15 @@
-import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { RxExit,RxHome,RxPerson,RxPlusCircled,RxAccessibility, RxEnter  } from "react-icons/rx";
+import { useAuth } from "../contexts/AuthContext";
 export default function Sidebar() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [username, setUsername] = useState(null);
+  const { user, logout } = useAuth();
   const location = useLocation();
 
-  useEffect(() => {
-    const token = localStorage.getItem("access");
-    const storedUsername = localStorage.getItem("username");
-
-    setIsAuthenticated(!!token);
-    setUsername(storedUsername);
-  }, [location]);
+  // chequear si el usuario está autenticado
+  // Si el usuario está autenticado, isAuthenticated será true, de lo contrario será false
+  const isAuthenticated = !!user;
+  // Obtener el nombre de usuario del usuario autenticado
+  const username = user?.username;
 
   return (
     <aside className="w-full md:w-64 bg-gray-900 text-white p-6 shadow-lg flex flex-row md:flex-col items-center md:items-start justify-center md:justify-start space-x-6 md:space-x-0 space-y-0 md:space-y-6">
@@ -40,12 +37,7 @@ export default function Sidebar() {
             <li className="flex items-center space-x-2">
               <RxExit/>
               <button
-                onClick={() => {
-                  localStorage.removeItem("access");
-                  localStorage.removeItem("refresh");
-                  localStorage.removeItem("username");
-                  window.location.reload();
-                }}
+                onClick={logout}
                 className="hover:text-red-400"
               >
                 

@@ -17,7 +17,7 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROJECT_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+GOOGLE_SSO_CLIENT_ID = os.getenv("GOOGLE_SSO_CLIENT_ID")
 MEDIA_ROOT=os.path.join(BASE_DIR,"media/")
 MEDIA_URL="/media/"
 

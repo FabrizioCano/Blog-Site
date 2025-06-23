@@ -1,26 +1,29 @@
 import { useEffect, useState } from "react";
 import FollowButton from "./FollowButton";
-import { getUserIdFromToken } from "../utils/auth";
+import {RxArrowLeft} from "react-icons/rx";
 import { useParams } from "react-router-dom";
-import { authFetch } from "../utils/auth";
-
+import { useAuth } from "../contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
-
+//funcion para mostrar el perfil de un usuario
 function ProfilePage() {
   const [profile, setProfile] = useState(null);
   const [followersCount, setFollowersCount] = useState(0);
-
-  const loggedInUserId = getUserIdFromToken();
+  const { user,authFetch } = useAuth();
   const { username } = useParams();
 
   useEffect(() => {
+    //funcion para obtener el perfil del usuario
     async function fetchProfile() {
       try {
+        // realizar la petición al backend para obtener el perfil del usuario
         const res = await authFetch(`${API_URL}/profiles/${username}/`);
         if (!res.ok) throw new Error("Profile not found");
         const data = await res.json();
+        // establecer el perfil del usuario en el estado
         setProfile(data);
+        // establecer el número de seguidores en el estado
         setFollowersCount(data.total_followers); 
       } catch (err) {
         console.error("Error fetching profile:", err);
@@ -29,16 +32,21 @@ function ProfilePage() {
 
     fetchProfile();
     
-  }, [username]);
+  }, [username,authFetch]);
 
   if (!profile || !profile.user) {
     return <div className="text-center mt-10 text-gray-500">Loading profile...</div>;
   }
 
-  const isOwnProfile = loggedInUserId === profile.user.id;
+  const isOwnProfile = user?.id === profile.user.id;
 
   return (
     <div className="max-w-md mx-auto bg-white shadow rounded p-6">
+      {/* back to home link */}
+      <div className="flex items-center space-x-2">
+        
+          <Link to="/" className="hover:text-blue-400"><RxArrowLeft /> </Link>
+      </div>
       <img
         src={profile.image || "https://i.imgur.com/dYcYQ7E.png"}
         alt={`${profile.user.username} avatar`}
