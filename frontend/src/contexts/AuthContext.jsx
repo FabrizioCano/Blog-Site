@@ -23,11 +23,14 @@ export const AuthProvider = ({ children }) => {
       };
       setUser(newUser);
       localStorage.setItem("user", JSON.stringify(newUser));
+      return newUser;
     } else {
       setUser(null);
       localStorage.removeItem("user");
+      return null;
     }
   };
+
 
   const login = ({ access, refresh }) => {
     setAccessToken(access);
@@ -96,6 +99,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const googleLogin = async (googleToken) => {
+
     try {
       const res = await fetch(`${API_URL}/accounts/google/`, {
         method: "POST",
@@ -112,7 +116,7 @@ export const AuthProvider = ({ children }) => {
       setRefreshToken(data.refresh);
       localStorage.setItem("accessToken", data.access);
       localStorage.setItem("refreshToken", data.refresh);
-      updateUserFromToken(data.access);
+      const newUser = updateUserFromToken(data.access);
       toast.success("Logged in with Google!");
     } catch (err) {
       console.error("Google login error:", err);
@@ -144,7 +148,8 @@ export const AuthProvider = ({ children }) => {
     if (accessToken && !user) {
       updateUserFromToken(accessToken);
     }
-  }, []);
+  }, [accessToken, user]);
+
 
   return (
     <AuthContext.Provider value={{ user, login, logout, googleLogin, authFetch }}>

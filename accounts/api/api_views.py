@@ -18,6 +18,8 @@ from google.auth.transport import requests
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
 import os
+from dotenv import load_dotenv
+load_dotenv()
 User = get_user_model()
 
 class GoogleLoginView(APIView):
@@ -34,7 +36,7 @@ class GoogleLoginView(APIView):
             )
 
             email = idinfo.get("email")
-            name = idinfo.get("name")
+            name = idinfo.get("name") or email.split("@")[0]
             sub = idinfo.get("sub")  
 
             if not email:
@@ -45,14 +47,23 @@ class GoogleLoginView(APIView):
                 "is_active": True,
             })
 
-            if created:
-                user.username = name.replace(" ", "").lower()
+            # Actualizar username si no existe o está vacío (también usuarios ya existentes)
+            if not user.username or user.username.strip() == "":
+                base_username = name.replace(" ", "").lower()
+                username = base_username
+                counter = 1
+                while User.objects.filter(username=username).exclude(pk=user.pk).exists():
+                    username = f"{base_username}{counter}"
+                    counter += 1
+                user.username = username
                 user.save()
 
-          
             profile, profile_created = Profile.objects.get_or_create(user=user)
 
             refresh = RefreshToken.for_user(user)
+            refresh["username"] = user.username
+    
+
             return Response({
                 "access": str(refresh.access_token),
                 "refresh": str(refresh),
@@ -60,8 +71,10 @@ class GoogleLoginView(APIView):
                 "user_id": user.id,
             })
 
-        except ValueError:
-            return Response({"detail": "Invalid Google token"}, status=status.HTTP_400_BAD_REQUEST)
+        except ValueError as e:
+            print(f"[GoogleLogin] Token verification failed: {e}")
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer

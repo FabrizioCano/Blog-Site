@@ -17,7 +17,7 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROJECT_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-GOOGLE_SSO_CLIENT_ID = os.getenv("GOOGLE_SSO_CLIENT_ID")
+
 MEDIA_ROOT=os.path.join(BASE_DIR,"media/")
 MEDIA_URL="/media/"
 
@@ -33,7 +33,7 @@ EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")=="True"
 EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
-
+GOOGLE_SSO_CLIENT_ID = os.getenv("GOOGLE_SSO_CLIENT_ID")
 
 ALLOWED_HOSTS = []
 
@@ -204,10 +204,10 @@ CORS_ALLOW_CREDENTIALS = True
 SIMPLE_JWT = {
     
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-
-    
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_OBTAIN_SERIALIZER": "accounts.serializers.CustomTokenObtainPairSerializer",
 
- 
     
 }

@@ -18,13 +18,20 @@ export default function Register() {
   const navigate = useNavigate();
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
+
+    if (!credentialResponse.credential) {
+      toast.error("Google login failed: Missing token.");
+      return;
+    }
+
     try {
       await googleLogin(credentialResponse.credential);
-      navigate("/");
+      navigate("/",{ replace: true });
     } catch (error) {
       toast.error("Google login failed");
     }
   };
+
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -117,15 +124,15 @@ export default function Register() {
           </button>
         </form>
 
-        {/* <div className="mt-6 text-center">
+        <div className="mt-6 text-center">
           <p className="text-gray-500 mb-2">Or register with Google:</p>
           <GoogleLogin
             onSuccess={handleGoogleLoginSuccess}
             onError={() => toast.error("Google Login Failed")}
-            width="100%"
+            width="100"
           />
 
-        </div> */}
+        </div>
       </div>
     </div>
   );

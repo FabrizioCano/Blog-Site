@@ -16,7 +16,7 @@ export default function Login() {
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     try {
       await googleLogin(credentialResponse.credential);
-      navigate("/");
+      navigate("/",{ replace: true });
     } catch (error) {
       toast.error("Google login failed");
     }
@@ -107,7 +107,7 @@ export default function Login() {
           </div>
         </form>
 
-        {/* <div className="mt-6 text-center">
+        <div className="mt-6 text-center">
           <p className="text-gray-500 mb-2">Or login with Google:</p>
           <GoogleLogin
             onSuccess={handleGoogleLoginSuccess}
@@ -115,7 +115,7 @@ export default function Login() {
             width="100%"
           />
 
-        </div> */}
+        </div>
       </div>
     </div>
   );
