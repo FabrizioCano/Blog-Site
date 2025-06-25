@@ -35,18 +35,18 @@ SECRET_KEY=tu_clave_secreta
 DEBUG=True
 
 EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
-EMAIL_HOST=smtp.gmail.com
+EMAIL_HOST=
 EMAIL_USE_TLS=True
-EMAIL_PORT=587
+EMAIL_PORT=
 EMAIL_HOST_USER=
 EMAIL_HOST_PASSWORD=
 
 
 POSTGRES_DB=nombre_de_tu_db
-POSTGRES_USER=tu_usuario_db
-POSTGRES_PASSWORD=tu_contraseña_db
-POSTGRES_HOST=localhost
-POSTGRES_PORT=5432
+POSTGRES_USER=usuario_db
+POSTGRES_PASSWORD=contraseña_db
+POSTGRES_HOST=host
+POSTGRES_PORT=puerto
 ```
 
 ### 3. En el frontend, crea un archivo .env con:

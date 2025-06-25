@@ -6,7 +6,11 @@ import Header from "./Header";
 import { useAuth } from "../contexts/AuthContext";
 export default function Home() {
   const { user } = useAuth();
-  
+
+  useEffect(() => {
+    console.log("user changed:", user);
+  }, [user]);
+
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
